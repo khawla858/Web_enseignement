@@ -1,0 +1,132 @@
+<?php
+session_start();
+require_once 'config.php'; // connexion à la BDD
+
+// Vérifie que l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
+
+// Récupère l'ID de l'utilisateur connecté
+$userId = $_SESSION['user_id'];
+
+// Récupération de la filière du coordinateur connecté
+$stmt = $pdo->prepare("SELECT f.* 
+                       FROM filieres f
+                       JOIN coordinateurs_filieres cf ON f.id = cf.filiere_id
+                       WHERE cf.user_id = ?");
+$stmt->execute([$userId]);
+$filiere = $stmt->fetch();
+
+if (!$filiere) {
+    echo "Aucune filière associée à ce coordinateur.";
+    exit;
+}
+
+// Filtres
+$filtre_code = $_GET['code_ue'] ?? '';
+$filtre_nom = $_GET['nom_ue'] ?? '';
+
+// Récupération des UE de la filière avec filtres
+$query = "SELECT * FROM unites_enseignement 
+          WHERE filiere = :filiere 
+          AND code_ue LIKE :code 
+          AND nom_ue LIKE :nom";
+$stmt = $pdo->prepare($query);
+$stmt->execute([
+    ':filiere' => $filiere['nom'],
+    ':code' => "%$filtre_code%",
+    ':nom' => "%$filtre_nom%"
+]);
+$ues = $stmt->fetchAll();
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gestion des UE - <?= htmlspecialchars($filiere['nom']) ?></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    .export-btn {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .export-btn:hover {
+      background-color: #218838;
+    }
+    .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .filters-form input {
+      margin-right: 10px;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">Gestion des UE - <?= htmlspecialchars($filiere['nom']) ?></h2>
+
+  <div class="action-buttons">
+    <form method="get" class="filters-form">
+      <input type="text" name="code_ue" placeholder="Filtrer par Code UE" value="<?= htmlspecialchars($filtre_code) ?>" />
+      <input type="text" name="nom_ue" placeholder="Filtrer par Nom UE" value="<?= htmlspecialchars($filtre_nom) ?>" />
+      <button type="submit" class="btn btn-primary">Filtrer</button>
+    </form>
+
+    <a href="utils/export_data.php?type=ues&filiere=<?= urlencode($filiere['nom']) ?>&code_ue=<?= urlencode($filtre_code) ?>&nom_ue=<?= urlencode($filtre_nom) ?>" 
+       class="export-btn">
+      <i class="fas fa-file-excel"></i> Exporter en Excel
+    </a>
+  </div>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Code UE</th>
+        <th>Nom UE</th>
+        <th>Volume CM</th>
+        <th>Volume TD</th>
+        <th>Volume TP</th>
+        <th>Spécialité</th>
+        <th>Filière</th>
+        <th>Responsable ID</th>
+        <th>Semestre</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($ues as $ue): ?>
+        <tr>
+          <td><?= htmlspecialchars($ue['id']) ?></td>
+          <td><?= htmlspecialchars($ue['code_ue']) ?></td>
+          <td><?= htmlspecialchars($ue['nom_ue']) ?></td>
+          <td><?= htmlspecialchars($ue['volume_cm']) ?></td>
+          <td><?= htmlspecialchars($ue['volume_td']) ?></td>
+          <td><?= htmlspecialchars($ue['volume_tp']) ?></td>
+          <td><?= htmlspecialchars($ue['specialite']) ?></td>
+          <td><?= htmlspecialchars($ue['filiere']) ?></td>
+          <td><?= htmlspecialchars($ue['responsable_id']) ?></td>
+          <td><?= htmlspecialchars($ue['semestre']) ?></td>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

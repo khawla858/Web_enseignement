@@ -1,0 +1,12 @@
+<table border='1'><tr>
+        <th>Code UE</th>
+        <th>Nom UE</th>
+        <th>Semestre</th>
+        <th>Volume CM</th>
+        <th>Volume TD</th>
+        <th>Volume TP</th>
+        <th>Total Heures</th>
+        <th>Crédits</th>
+        <th>Responsable</th>
+        <th>Filière</th>
+      </tr></table>

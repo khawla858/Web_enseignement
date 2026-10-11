@@ -1,0 +1,12 @@
+<table border='1'><tr>
+        <th>Code UE</th>
+        <th>Nom UE</th>
+        <th>Semestre</th>
+        <th>Volume CM</th>
+        <th>Volume TD</th>
+        <th>Volume TP</th>
+        <th>Total Heures</th>
+        <th>Crédits</th>
+        <th>Responsable</th>
+        <th>Filière</th>
+      </tr><tr><td>3333</td><td>java</td><td>S1</td><td>12h</td><td>12h</td><td>12h</td><td>36h</td><td>3</td><td>marouani malika</td><td>GI</td></tr></table>

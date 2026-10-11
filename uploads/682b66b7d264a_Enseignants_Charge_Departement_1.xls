@@ -1,0 +1,9 @@
+<table border='1'><tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Spécialité</th>
+        <th>Charge Horaire (h)</th>
+        <th>Statut</th>
+        <th>Nombre UE</th>
+        <th>UE Affectées</th>
+      </tr><tr><td>enseignantNom</td><td>ensPrenom</td><td>Intelligence artificielle</td><td>12</td><td>Sous-charge</td><td>1</td><td>000 - recherche opérationelle (TP) - 12h<br></td></tr><tr><td>aamer</td><td>khadija</td><td>Informatique</td><td>150</td><td>Sous-charge</td><td>1</td><td>1234 - Algorithmique (CM) - 30h<br></td></tr><tr><td>aamer</td><td>sara</td><td>Informatique</td><td>77</td><td>Sous-charge</td><td>2</td><td>111 - developpement web (TD) - 17h<br>1234 - Algorithmique (CM) - 30h<br></td></tr><tr><td>ahmed</td><td>aamer</td><td>Informatique</td><td>0</td><td>Sous-charge</td><td>0</td><td></td></tr><tr><td>khadija</td><td>aamer</td><td>Informatique</td><td>0</td><td>Sous-charge</td><td>0</td><td></td></tr></table>
